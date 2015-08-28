@@ -28,8 +28,13 @@ int main (void)
 	printf("%.6g \n", r);
 
 		/* Exercicio 3 */
+	/*
+	Para determinar a massa do paraquedista, pede-se que a main
+	fosse alterada para imprimir seu valor, pra isso eu adicionei 
+	mais um parâmetro na função de bissecao que passa o valor do double 'c' 
+	como referência pois pv(c) = 0 (aproximação) , portanto c é a massa do paraquedista
+	*/
 	r = bissecao(30, 60, 6, pv,&x);
-
 	printf(" massa do paraquedista : %.6g \n", x);
 
 	/* Exercicio 5 */
