@@ -47,7 +47,7 @@ int main (void)
 		
 	x = pontofixo(5, 0.0005, g);
 
-	printf(" Ponto fixo x : %g \n", x);
+	printf(" Ponto fixo da f(x) : %g \n", x);
 
 	printf(" f(x) = %g \n", f(x));
 	return 0;
