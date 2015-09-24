@@ -4,7 +4,7 @@
 double** mat_cria(int m, int n)
 {
 	double** A;
-	int i, j;
+	int i;
 	A = (double**)malloc(m*sizeof(double*));
 	for(i=0; i < m; i++)
 	{
@@ -38,21 +38,22 @@ void mat_transposta(int m, int n, double** A, double** T)
 // Multiplicação de Vetor x Matriz
 void mat_multv(int m, int n, double** A, double* v, double* w)
 {
+/* matriz MxN . vetor Nx1 -> vetor Mx1*/
 	int i, j;
 	for(i = 0; i < m; i++)
 		w[i] = 0;
-	for(j = 0; j < n; j++)
+	for(i = 0; i < m; i++)
 	{
-		for(i = 0; i < m; i++)
+		for(j = 0; j < n; j++)
 		{
-			w[i] += v[i] * A[i][j];
+			w[i] += A[i][j] * v[j];
 		}
 	}
 }
 // Multiplicação de Matrizes
 void mat_multm(int m, int n, int q, double** A, double** B, double** C)
 {
-	int i, j;
+	int i, j, k, soma = 0;
 	for(i = 0; i < m; i ++)
 	{
 		for(j = 0; j < q; j++)
@@ -60,11 +61,16 @@ void mat_multm(int m, int n, int q, double** A, double** B, double** C)
 			C[i][j] = 0;
 		}
 	}
-	for(j = 0; j < q; j++)
+	for(i = 0; i < m; i++)
 	{
-		for(i = 0; i < n; i++)
+		for(j = 0; j < q; j++)
 		{
-			C[i][j] += A[i][j] * B[i][j];
+			for(k = 0; k < n; k++)
+			{
+				soma+= A[i][k] * B[k][j];
+			}
+			C[i][j] = soma;
+			soma = 0;
 		}
 	}
 }
