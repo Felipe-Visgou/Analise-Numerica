@@ -1,4 +1,4 @@
-// Função Cria Matriz
+// Função Cria Matriz MxN
 double** mat_cria(int m, int n);
 // Função Libera a Matriz
 void mat_libera(int m, double** A);

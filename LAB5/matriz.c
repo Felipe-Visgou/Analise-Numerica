@@ -53,24 +53,19 @@ void mat_multv(int m, int n, double** A, double* v, double* w)
 // Multiplicação de Matrizes
 void mat_multm(int m, int n, int q, double** A, double** B, double** C)
 {
-	int i, j, k, soma = 0;
-	for(i = 0; i < m; i ++)
+	int c, d, k;
+	double sum = 0;
+	for (c = 0; c < m; c++)
 	{
-		for(j = 0; j < q; j++)
+		for (d = 0; d < q; d++)
 		{
-			C[i][j] = 0;
-		}
-	}
-	for(i = 0; i < m; i++)
-	{
-		for(j = 0; j < q; j++)
-		{
-			for(k = 0; k < n; k++)
+			for (k = 0; k < n; k++) 
 			{
-				soma+= A[i][k] * B[k][j];
+				sum = sum + A[c][k]*B[k][d];
 			}
-			C[i][j] = soma;
-			soma = 0;
+
+			C[c][d] = sum;
+			sum = 0;
 		}
 	}
 }

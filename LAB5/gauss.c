@@ -14,8 +14,8 @@ double modulo(double a);
 
 double** fatoracao( int n, double** A)
 {
-	int i, j, k, troca[3];
-	double  fator[100];
+	int i, j, k, troca[100];
+	double  fator[100], *temp;
 	double** P = mat_cria(n,n);
 	/* inicializa a atriz permutação */
 	for(i = 0; i < n; i++)
@@ -36,7 +36,7 @@ double** fatoracao( int n, double** A)
 	// LU
 	for(j = 0, k = 0; j < n-1; j++)
 	{
-		for(i = j; i < n; i++)
+		for(i = j+1; i < n; i++)
 		{
 			A[i][j] = fator[k];
 			k++;
@@ -45,7 +45,11 @@ double** fatoracao( int n, double** A)
 	
 	// faz a troca na matriz permutação
 	for(i = 0; i < n; i++)
+	{
+		temp = P[i];
 		P[i] = P[troca[i]];
+		P[troca[i]] = temp;
+	}
 	return P;
 }
 
@@ -54,8 +58,11 @@ double* substituicao (int n, double** A, double** P, double* b)
 {
 	double** L = mat_cria(n,n);
 	double** U = mat_cria(n,n);
-	double *x = (double*)malloc(sizeof(double));
-	int i, j, k;
+	double *x = (double*)malloc(n*sizeof(double));
+	double *pb = (double*)malloc(n*sizeof(double));
+	double *y = (double*)malloc(n*sizeof(double));
+	double soma;
+	int i, j;
 
 	// Constroi a matriz L (diagonal Inferior)
 	for(j = 0; j < n; j++)
@@ -96,7 +103,35 @@ double* substituicao (int n, double** A, double** P, double* b)
 		}
 	}
 
-	// BAsta fazer a retro substituição para achar a soluçao x
+	// Permutar o vetor b
+	mat_multv(n, n, P, b, pb);
+
+
+	// Ly = Pb
+	for(i = 0; i < n; i++)
+	{
+		soma = 0;
+		for(j = i-1; j >= 0; j--)
+		{
+			soma+=L[i][j]*y[j];
+		}
+		y[i] = (pb[i] - soma)/L[i][i];
+	}
+	// substituição regressiva Ux = y
+	for(i = n-1; i >= 0; i--)
+	{
+		soma = 0;
+		for(j = i+1; j < n; j++)
+		{
+			soma+=U[i][j]*x[j];
+		}
+		x[i] = (y[i] - soma)/U[i][i];
+	}
+	free(pb);
+	free(y);
+	mat_libera(n, L);
+	mat_libera(n, U);
+	return x;
 }
 
 double modulo(double a)
@@ -108,9 +143,12 @@ double modulo(double a)
 
 double** gauss_elimination(double** A, int n, double fator[], int troca[])
 {
-	int i, j, k, ixpivot ;
+	int i, j, k, l = 0, ixpivot, tmp ;
 	double f, p1, p2, *temp;
 
+	// Inicializa o vetor de trocas
+	for(i = 0; i < n; i++)
+		troca[i] = i;
 	// eliminação
 	for(j = 0; j < n-1; j++)
 	{
@@ -135,12 +173,16 @@ double** gauss_elimination(double** A, int n, double fator[], int troca[])
 			A[j] = temp;
 		}
 		// armazena a troca no vetor de trocas
-		troca[j] = ixpivot;
+		tmp = troca[j];
+		troca[j] = troca[ixpivot];
+		troca[ixpivot] = tmp;
+		//troca[ixpivot] = j;
 
 		for(i = j+1; i < n; i++)
 		{
 			f = A[i][j]/A[j][j];
-			fator[j] = f;
+			fator[l] = f; l++;
+		//	A[i][j] = 0;
 			for(k = j; k < n; k++)
 				A[i][k] = A[i][k] - A[j][k]*f;
 		}
