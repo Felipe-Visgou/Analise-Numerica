@@ -368,7 +368,7 @@ int main(void)
 	printv(6, x1);
 
 	// Sobre-Relaxamento
-	iter = SOR(2, A0, b0, x0, tol, 1.1);
+	iter = SOR(2, A1, b1, x1, tol, 1.1);
 	printf("Exemplo 2 (SOR): numero de iteracoes = %d \n", iter);
 	printv(6, x1);
 
